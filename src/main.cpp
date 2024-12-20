@@ -13,8 +13,6 @@ int main() {
     // 状态变量
     std::string algorithm_selected = "None";  // 用户选择的算法
     std::string array_input = "";             // 用户输入的数组
-    std::string process_output = "";          // 算法过程输出
-    std::string metrics_output = "";          // 算法运行结果
     std::vector<int> data = {1, 2, 3};
     // 设置项状态变量
     int graphics_selection = 0;  // Graphics 选项索引
@@ -32,11 +30,8 @@ int main() {
         "Introsort",  "MergeSort",  "QuickSort", "SelectionSort",
         "ShellSort",  "TimSort"};
     for (const auto& name : algorithms) {
-        algorithm_list_container->Add(Button(name, [&] {
-            algorithm_selected = name;
-            process_output = "Running \n" + name + "...";
-            metrics_output = "Metrics of " + name;
-        }));
+        algorithm_list_container->Add(
+            Button(name, [&] { algorithm_selected = name; }));
     }
 
     auto algorithm_list = Renderer(algorithm_list_container, [&] {
@@ -90,10 +85,7 @@ int main() {
 
     // 底部按钮和设置
     // Run 按钮
-    auto run_button = Button("Run", [&] {
-        process_output = "Running the algorithm on \ninput: " + array_input;
-        metrics_output = "Metrics computed successfully.";
-    });
+    auto run_button = Button("Run", [&] {});
 
     // Exit 按钮
     auto exit_button = Button("Exit", [&screen] {
