@@ -15,7 +15,7 @@ int main() {
     std::string array_input = "";             // 用户输入的数组
     std::string process_output = "";          // 算法过程输出
     std::string metrics_output = "";          // 算法运行结果
-
+    std::vector<int> data = {1, 2, 3};
     // 设置项状态变量
     int graphics_selection = 0;  // Graphics 选项索引
     int playback_speed = 1;      // Playback Speed 选项索引
@@ -47,7 +47,28 @@ int main() {
 
     // 中间 算法过程输出
     auto process_output_renderer = Renderer([&] {
-        return window(text(" 算法过程输出 "), text(process_output)) | flex;
+        std::vector<Element> bars;
+        int max_height = 10;  // 最大显示高度
+        if (!data.empty()) {
+            int max_value = *std::max_element(data.begin(), data.end());
+            for (int& value : data) {
+                value = max_value > max_height ? value * max_height / max_value
+                                               : value;
+            }
+        }
+        for (int value : data) {
+            std::string result(value, '#');
+            bars.push_back(hbox({
+                text(std::to_string(value)),  // 显示数值
+                text(result),
+            }));
+        }
+
+        // 修正 window 的调用
+        return window(text(" 算法过程输出 "),
+                      vbox(std::move(bars))  // vbox 应该放入 bars
+                      ) |
+               flex;
     });
 
     // 右上角 需要排序的数组输入
@@ -60,7 +81,11 @@ int main() {
 
     // 右中 指标输出
     auto metrics_output_renderer = Renderer([&] {
-        return window(text(" 指标输出 "), text(metrics_output)) | flex;
+        return window(text(" 指标输出 "), vbox({
+                                              text("a:"),
+                                              text("b:"),
+                                          })) |
+               flex;
     });
 
     // 底部按钮和设置
